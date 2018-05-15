@@ -1,0 +1,89 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0">
+	<title>音乐播放器</title>
+	<link rel="shortcut icon" href="src/imgs/laugh.png">   <!--color-icon.ico-->
+	<link rel="stylesheet" type="text/css" href="src/css/index.css">
+    
+    
+    <?php
+
+//php $data['username'] = "";
+$checkurl = 'http://localhost/music/MVC/index.php?a=logincheck';
+$searchurl = 'http://localhost/music/MVC/index.php?a=search';
+?>
+</head>
+
+<body>
+ <?php
+
+if (isset($data['error_msg']))
+{
+    //echo "<p class = 'error'>".$data['error_msg']."</p>";
+    echo "<script>alert('" . $data['error_msg'] . "');</script>";
+}
+
+?>
+<form method="POST" action="<?php
+echo $checkurl /*跳转到登录判断*/?>">
+    <span>用户名:</span><input type="text" name="username" 
+    value="<?php if (!empty($data['username'])) echo $data['username'];?>"/><br />
+    <span> 密  码:</span><input type="password" name="password"/><br />
+    <input type="submit" name="submit" value="login"/>
+    <input type="submit" name="submit" value="register"/>
+    <input type="submit" name="submit" value="忘记密码"/>
+</form>
+<div class="front">
+<?php
+
+if (!empty($_SESSION['user_id']))
+    echo "<h1> hello" . $data['username'] . "</h1>";
+
+?>
+<!--登录操作完成-->
+
+<form method="post" action="<?php echo $searchurl //跳转到查询页面?>">
+<input type="text" name="search" value="name or author or type" />
+<input type="submit" name="submit" value="search" />
+</form>
+
+<!--首页，歌曲展示-->
+<?php
+
+
+// Open a nown directory, and proceed to read its contents
+
+//目录从index.php开始
+$photo = "./public/songs";
+if (is_dir($photo))
+{
+    if ($dh = opendir($photo))
+    {
+        while (($file = readdir($dh)) != false)
+        {
+            $name = $photo.'/'.$file;
+            //echo $name;
+            if (is_file($name)){
+                $name = str_replace(" ","%20",$name);
+                echo "<br />"."<a href="."$name".">".$file." </a>";
+            }
+        }
+        closedir($dh);
+    }
+}
+
+
+
+?>
+
+</div>
+
+<video controls="media">
+
+<source src="http://localhost/music/MVC/public/songs/Can't%20Stop.mp3" type="audio/mpeg">songs</a>
+</video>
+</body>
+</html>
